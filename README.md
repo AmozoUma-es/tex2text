@@ -9,6 +9,7 @@ This script is designed to extract continuous text from scientific articles writ
 - Extracts and cleans text from TeX files.
 - Removes tables, figures, and mathematical expressions.
 - Converts cleaned TeX content into plain text.
+- Uses ftfy to automatically fix common text encoding issues, including ligatures and other character problems.
 - Saves extracted text in `.txt` files.
 - Generates statistics about the extracted text.
 - Handles multiple file encodings.
@@ -17,7 +18,7 @@ This script is designed to extract continuous text from scientific articles writ
 ## Requirements
 
 - Python 3.x
-- Required Python libraries: `os`, `re`, `tarfile`, `argparse`, `time`, `pandas`, `pylatexenc`, `shutil`
+- Required Python libraries: `os`, `re`, `tarfile`, `argparse`, `time`, `pandas`, `pylatexenc`, `shutil`, `ftfy`
 
 ## Usage Instructions
 
@@ -27,7 +28,11 @@ This script is designed to extract continuous text from scientific articles writ
 2. Install the required Python libraries using pip:
 
     ```sh
-    pip install pandas pylatexenc
+    pip install pandas pylatexenc ftfy
+    ```
+    or
+    ```sh
+    pip install -r requirements.txt
     ```
 
 ### Downloading TeX Files from arXiv

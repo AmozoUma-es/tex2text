@@ -19,8 +19,20 @@ def extract_tarfile(tar_file, path='.'):
     Returns:
     None
     """
-    with tarfile.open(tar_file, 'r:gz') as tar:
-        tar.extractall(path=path)
+    if not tarfile.is_tarfile(tar_file):
+        print(f"Error: {tar_file} is not a valid tar.gz file.")
+        return
+    
+    try:
+        with tarfile.open(tar_file, 'r:gz') as tar:
+            members = tar.getmembers()
+            if len(members) == 1 and members[0].isfile():
+                tar.extract(members[0], path=path)
+            else:
+                tar.extractall(path=path)
+        print(f"Successfully extracted {tar_file}")
+    except Exception as e:
+        print(f"Error extracting {tar_file}: {e}")
 
 def read_file_with_fallback(file_path):
     """
@@ -73,7 +85,9 @@ def find_main_tex_file(tex_files):
     for file, content in tex_files:
         if re.search(r'\\documentclass', content):
             return file, content
-    return tex_files[0]  # Return the first file if no documentclass is found
+    if isinstance(tex_files, list) and len(tex_files) > 0:
+        return tex_files[0]  # Return the first file if no documentclass is found
+    return "", ""
 
 def clean_tex_content(tex_content, debug=False):
     """
@@ -130,8 +144,12 @@ def tex_to_text(tex_content):
     str: The converted plain text.
     """
     converter = LatexNodes2Text()
-    text = converter.latex_to_text(tex_content)
-    return text
+    try:
+        text = converter.latex_to_text(tex_content)
+        return text
+    except Exception as e:
+        print(f"Error converting TeX to text: {e}")
+        return tex_content
 
 def clean_text(text):
     """
